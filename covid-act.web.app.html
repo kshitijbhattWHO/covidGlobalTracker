@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>WHO COVID-19 Health Systems Readiness &amp; Response Tracker</title>
+  <link rel="shortcut icon" href="https://www.who.int/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sticky-sidebar@3.3.1/dist/sticky-sidebar.min.js"></script>
+  <script src="https://d3js.org/d3.v6.js"></script>
+  <style>
+    body {
+      padding-top: 100px;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      max-height: 78px;
+      overflow: hidden;
+    }
+    .navbar-logo {
+      padding-left: .75rem;
+      width: 220px;
+      cursor: pointer;
+    }
+    .navbar-user button {
+      border: none;
+      background: #fff;
+      height: 45px;
+      display: inline;
+      padding-top: 5px;
+      font-weight: bold;
+    }
+    .navbar-user button .material-icons {
+      vertical-align: text-top;
+      margin-left: 5px;
+      font-weight: normal;
+    }
+    .navbar-search {
+      width: 350px;
+    }
+    .navbar-search input {
+      width: 100%;
+    }
+    .navbar-user {
+      width: 150px;
+      text-align: right;
+    }
+    .navbar-user img {
+      border-radius: 50%;
+    }
+    .container {
+      max-width: 1140px;
+      margin-bottom: 40px;
+    }
+    .container p {
+      font-size: large;
+      padding-right: 70px;
+    }
+    .nav {
+      flex-flow: column;
+      border-bottom: 1px solid #ccc;
+    }
+    .nav .nav-link {
+      border-radius: 0;
+      border-bottom: 3px solid #fff;
+    }
+    .nav .nav-link:hover {
+      background-color: #efefef;
+    }
+    .nav .nav-link.active,
+    .nav .nav-link:hover.active {
+      background-color: #ddd;
+    }
+    .nav-metric div {
+      color: #000;
+    }
+    .nav-metric .metric-name {
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: bold;
+      color: #555;
+      padding-bottom: 3px;
+    }
+    .nav-metric .material-icons {
+      font-size: 14px;
+    }
+    .nav-metric .risk-5 {
+      color: rgb(121, 0, 25);
+    }
+    .nav-metric .risk-4 {
+      color: rgb(217, 0, 44);
+    }
+    .nav-metric .risk-3 {
+      color: rgb(255, 150, 0);
+    }
+    .nav-metric .risk-2 {
+      color: rgb(255, 201, 0);
+    }
+    .nav-metric .risk-1 {
+      color: rgb(0, 212, 116);
+    }
+    .nav-metric .metric-value {
+      font-size: 24px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+    .nav-metric .metric-unit {
+      text-transform: uppercase;
+      font-size: 13px;
+      padding-bottom: 8px;
+    }
+    .nav.nav-tabs {
+      flex-wrap: nowrap;      
+      flex-flow: initial;   
+    }
+    .nav.nav-tabs .nav-link {
+      width: 150px;
+      padding: 5px;
+      margin: 0 15px 0 0;
+    }
+    .nav.nav-tabs .nav-link.active {
+      color: initial;
+      background-color: initial;
+      border-bottom: 3px solid #111;
+    }
+    .nav.nav-tabs .nav-metric .metric-name {
+      height: 40px;
+    }
+    .tab-content .tab-pane {
+      padding: 30px 0;
+    }
+    svg.selectable {
+      cursor: pointer;
+    }
+    .chart {
+      background: #fff;
+    }
+    .chart-header {
+      background: #fff;
+    }
+    .chart-header .form-floating {
+      display: inline-block;
+    }
+    .chart-header .form-floating label {
+      text-transform: uppercase;
+      font-size: 13px;;
+      font-weight: bold;
+      color: #333;
+      opacity: .8;
+      white-space: nowrap;
+    }
+    .chart-header .form-floating select {
+      height: 60px;
+      cursor: pointer;
+      line-height: initial;
+      font-weight: 500;
+    }
+    .chart-header .form-floating select option {
+      background-color: #fff;
+    }
+    .chart-header .form-floating select:hover {
+      background-color: #f9f9f9;
+    }
+    .chart-header .form-floating select:hover option {
+      background-color: #fff;
+    }
+    .chart-content {
+      background: #fff;
+      padding: 50px 0;
+    }
+    .chart-axis {
+      color: #888;
+    }
+    .chart-axis text {
+      color: #000;
+      font-size: 13px;
+    }
+    .chart-tabs {
+      background: #fff;
+    }
+    .chart-tabs-content {
+      background: #fff;
+    }
+    .sidebar .inner-wrapper-sticky {
+      box-shadow: rgb(0 0 0 / 8%) 0px 2px 16px;
+    }
+    .sidebar .nav {
+      background-color: #f9f9f9;
+    }
+    .sidebar h4 {
+      font-size: large;
+      padding: 10px 15px;
+      border-bottom: 3px solid #fff;
+      margin: 0;
+      background: #007eb4;
+      color: #fff;
+      border-radius: 5px 5px 0 0;
+    }
+    footer {
+      background-color: #007eb4;
+      color: #fff;
+    }
+    footer a {
+      color: #fff;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .page.align-center .container h1,
+    .page.align-center .container h2,
+    .page.align-center .container p,
+    .page.align-center .tab-content .tab-pane,
+    .page.align-center .nav,
+    .page.align-center .chart {
+      justify-content: center;
+      text-align: center;
+    }
+    .page.align-center .container p {
+      font-size: large;
+      padding: 20px 150px;
+    }
+    .page.align-center .container h1,
+    .page.align-center .container h2 {
+      padding: 10px 150px;
+    }
+
+
+  </style>
+  <script>
+    $(document).ready(function () {
+      drawMap("#mapSVG");
+      drawChart("#chartSVG");
+      drawNav("#mapTabs", tabsList);
+    });
+    function navigate(page) {
+      $(window).scrollTop(0);
+      $(".page").removeClass("active");
+      $(page).addClass("active");
+      if (page == "#location") {
+        drawChart("#casesChart");
+        drawNav("#casesTabs", [
+        {
+            id: "mapContent",
+            name: "Daily new cases",
+            risk: 3,
+            value: "52",
+            unit: "per 100k"
+          },
+          {
+            id: "mapContent",
+            name: "Vaccination coverage",
+            risk: 2,
+            value: "75%",
+            unit: ""
+          },
+        ]);
+        var sidebar = new StickySidebar("#sidebar", {topSpacing: 110});
+      }
+    }
+    function drawMap(elm) {
+      var svg = d3.select(elm),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+      // Map and projection
+      var path = d3.geoPath();
+      var projection = d3.geoMercator()
+        .scale(175)
+        .center([0, 20])
+        .translate([width / 2, height / 2]);
+      // Data and color scale
+      let data = new Map()
+      var colorScale = d3.scaleThreshold()
+        .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
+        .range(d3.schemeBlues[7]);
+      // Load external data and boot
+      Promise.all([
+        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"),
+        d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv",
+        function (d) {
+            data.set(d.code, +d.pop)
+          })
+        ]).then(function (loadData) {
+          let topo = loadData[0]
+          let mouseOver = function(d) {
+          d3.selectAll(".Country")
+            .transition()
+            .duration(200)
+            .style("opacity", .5)
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .style("opacity", 1)
+            .style("stroke", "#666")
+        }
+        let mouseLeave = function(d) {
+          d3.selectAll(".Country")
+            .transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "transparent")
+          d3.select(this)
+            .transition()
+            .duration(0)
+            .style("stroke", "transparent")
+        }
+        // Draw the map
+        svg.append("g")
+          .selectAll("path")
+          .data(topo.features)
+          .join("path")
+          // draw each country
+          .attr("d", d3.geoPath()
+            .projection(projection)
+          )
+          // set the color of each country
+          .attr("fill", function (d) {
+            d.total = data.get(d.id) || 0;
+            return colorScale(d.total);
+          })
+          .style("stroke", "transparent")
+          .attr("class", function(d){ return "Country" } )
+          .style("opacity", .8)
+          .on("mouseover", mouseOver )
+          .on("mouseleave", mouseLeave )
+          .append("title")
+            .text(d => d.properties.name);
+      })
+    }
+    function drawChart(elm) {
+      // chart svg: set the dimensions and margins of the graph
+      $(elm).html("");
+      var parentWidth = $(elm).width();
+      var margin = {top: 10, right: 30, bottom: 30, left: 60},
+          width = parentWidth - margin.left - margin.right,
+          height = (parentWidth * .4) - margin.top - margin.bottom;
+      // append the svg object to the body of the page
+      var svg = d3.select(elm)
+        .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", `translate(${margin.left},${margin.top})`);
+        d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv").then( function(data) {
+        // group the data: I want to draw one line per group
+        const sumstat = d3.group(data, d => d.name); // nest function allows to group the calculation per level of a factor
+
+        // Add X axis --> it is a date format
+        const x = d3.scaleLinear()
+          .domain(d3.extent(data, function(d) { return d.year; }))
+          .range([ 0, width ]);
+        svg.append("g")
+          .attr("transform", `translate(0, ${height})`)
+          .attr("class", "chart-axis")
+          .attr("stroke-width", 1.5)
+          .call(d3.axisBottom(x).ticks(5));
+        // Add Y axis
+        const y = d3.scaleLinear()
+          .domain([0, d3.max(data, function(d) { return +d.n; })])
+          .range([ height, 0 ]);
+        svg.append("g")
+          .attr("class", "chart-axis")
+          .attr("stroke-width", 1.5)
+          .call(d3.axisLeft(y));
+        // color palette
+        const color = d3.scaleOrdinal()
+          .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+        // Draw the line
+        svg.selectAll(".line")
+          .data(sumstat)
+          .join("path")
+            .attr("fill", "none")
+            .attr("stroke", function(d){ return color(d[0]) })
+            .attr("stroke-width", 2.5)
+            .attr("d", function(d){
+              return d3.line()
+                .x(function(d) { return x(d.year); })
+                .y(function(d) { return y(+d.n); })
+                (d[1])
+            })
+        })
+    }
+    function drawNav(elm, data) {
+      var str = `
+        <ul class="nav nav-pills nav-tabs" id="pills-tab" role="tablist">
+        ${ data.map((item, i) => `
+          <li class="nav-item" role="presentation">
+            <a class="nav-link nav-metric ${ i == 0 ? 'active' : ''}" id="${ item.id }Tab" data-bs-toggle="pill" data-bs-target="#${ item.id }" type="button" role="tab" aria-controls="${ item.id }" aria-selected="true">
+              <div class="metric-name">${ item.name }</div>
+              <div>
+                <span class="material-icons risk-${ item.risk }">fiber_manual_record</span>
+                <span class="metric-value">${ item.value }</span>
+                <span class="metric-unit">${ item.unit }</span>
+              </div>
+            </a>
+          </li>
+        `.trim()).join("") }
+        </ul>
+      `
+      $(elm).html(str.trim());
+    }
+    var tabsList = [
+      {
+          id: "mapContent",
+          name: "Daily new cases",
+          risk: 3,
+          value: "52",
+          unit: "per 100k"
+        },
+        {
+          id: "mapContent",
+          name: "Vaccination coverage",
+          risk: 2,
+          value: "75%",
+          unit: ""
+        },
+        {
+          id: "mapContent",
+          name: "Positive test rate",
+          risk: 1,
+          value: "3.1%",
+          unit: ""
+        },
+        {
+          id: "mapContent",
+          name: "Hospital capacity available",
+          risk: 5,
+          value: "67%",
+          unit: ""
+        },
+        {
+          id: "mapContent",
+          name: "Health workers protected",
+          risk: 4,
+          value: "45%",
+          unit: ""
+        },
+      ];
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-light fixed-top">
+    <div class="navbar-logo" onclick="navigate('#home')">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/World_Health_Organization_Logo.svg" height="52" />
+    </div>
+    <div class="p-2 navbar-search">
+      <input class="form-control me-2" type="search" placeholder="Search location" aria-label="Search">
+    </div>
+    <div class="p-2 navbar-user">
+      <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+        aria-controls="offcanvasExample">
+        Menu<span class="material-icons">menu</span>
+      </button>
+      <!--img src="images/profile.png" height="45"/-->
+    </div>
+  </nav>
+  <div id="home" class="page active align-center">
+    <div class="container">
+      <h1>COVID Health Systems Readiness &amp; Response Tracker</h1>
+      <p>Evidence-based tracking and analysis of COVID-19 health systems readiness and response to support countries,
+        communities and partners accelerate the equitable delivery of critical health interventions to stop transmission
+        and save lives.</p>
+      <div id="mapTabs"></div>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="mapContent" role="tabpanel" aria-labelledby="mapContent">
+          <svg id="mapSVG" class="selectable" width="1100" height="600" onclick="navigate('#location')"></svg>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Compare Trends</h2>
+      <p>As of October 28, 2021, there have been roughly 45.8 million cases and 743,000 deaths from COVID in the United States. Over the last 14 days, daily new cases have decreased by about 16% and daily deaths have decreased by about 15%.</p>
+      <div class="chart">
+        <div class="chart-header">
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="1">Daily new cases</option>
+              <option value="2">Vaccination coverage</option>
+              <option value="3">Positive test rate</option>
+              <option value="4">Hospital capacity available</option>
+              <option value="5">Health workers protected</option>
+              <option value="6">Financing available</option>
+            </select>
+            <label>Metric</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="3">All time</option>
+              <option value="1">Past 60 days</option>
+              <option value="2">Past 180 days</option>
+            </select>
+            <label>Time period</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="3">Country income level</option>
+              <option value="1">Region</option>
+              <option value="1">Selected countries</option>
+            </select>
+            <label>Group by</label>
+          </div>
+        </div>
+        <div class="chart-content">
+          <div id="chartSVG"></div>
+        </div>
+        <!--div class="chart-tabs">
+          chart-tabs
+        </div>
+        <div class="chart-tabs-content">
+          chart-tabs-content
+        </div-->
+      </div>
+    </div>
+    <div class="container">
+      <h2>About Us</h2>
+      <p>This website is part of the <b>Health Systems & Response Connector (HSRC)</b> of the <a href="https://www.who.int/initiatives/act-accelerator" style="text-decoration: none;">Access to COVID-19 Tools (ACT) Accelerator</a>. The goal of the HSRC is to ensure all countries have the necessary
+        technical, operational and financial resources to translate new COVID-19 tools into effective national response interventions.</p>
+        <div class="d-flex justify-content-center">
+          <div class="p-5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/World_Health_Organization_Logo.svg" height="48">
+          </div>
+          <div class="p-5" style="padding-top: 2rem !important;">
+            <img src="https://www.un.org/sites/un2.un.org/files/field/image/world-bank-logo_0.jpg" height="75">
+          </div>
+          <div class="p-5" style="padding-top: .5rem !important;">
+            <img src="https://www.theglobalfund.org/_Site/Images/screen_homepage_en.jpg" height="120">
+          </div>
+          <div class="p-5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/UNICEF_Logo.svg/768px-UNICEF_Logo.svg.png" height="30">
+          </div>
+        </div>
+        <p><button type="button" class="btn btn-outline-primary">Learn more about us</button></p>
+    </div>
+  </div>
+  <div id="location" class="page">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 order-md-2">
+          <h1 class="d-sm-block d-md-none">Australia</h1>
+          <div id="sidebar" class="sidebar">
+            <h4 class="text-truncate">Risk Level</h4>
+            <ul class="nav nav-pills" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Daily new cases</div>
+                  <div>
+                    <span class="material-icons risk-3">fiber_manual_record</span>
+                    <span class="metric-value">68.3</span>
+                    <span class="metric-unit">Per 100K</span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Vaccination coverage</div>
+                  <div>
+                    <span class="material-icons risk-2">fiber_manual_record</span>
+                    <span class="metric-value">75%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Positive test rate</div>
+                  <div>
+                    <span class="material-icons risk-4">fiber_manual_record</span>
+                    <span class="metric-value">3.1%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Hospital capacity available</div>
+                  <div>
+                    <span class="material-icons risk-5">fiber_manual_record</span>
+                    <span class="metric-value">67.4%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Health workers protected</div>
+                  <div>
+                    <span class="material-icons risk-3">fiber_manual_record</span>
+                    <span class="metric-value">45%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Response funds available</div>
+                  <div>
+                    <span class="material-icons risk-4">fiber_manual_record</span>
+                    <span class="metric-value">65%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-9 order-md-1" style="height: 1000px;">
+          <h1 class="d-sm-none d-md-block">Australia</h1>
+          <p>In Australia, from 3 January 2020 to 4:40pm CEST, 29 October 2021, there have been 165,904 confirmed cases of COVID-19 with 1,696 deaths, reported to WHO. As of 23 October 2021, a total of 34,238,479 vaccine doses have been administered.</p>
+          <h2>Cases</h2>
+          <div class="chart">
+            <div class="chart-header">
+              <div id="casesTabs"></div>
+            </div>
+            <div class="chart-content">
+              <div id="casesChart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="bd-footer py-5 mt-5">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-lg-3 mb-3">
+          <a class="d-inline-flex align-items-center mb-2 text-decoration-none" href="/">
+            <img src="http://www.who.int/ResourcePackages/WHO/assets/dist/images/logos/en/h-logo-white.svg" height="50" alt="Home" class="logo">
+          </a>
+          <ul class="list-unstyled small">
+            <li class="mb-2 visually-hidden">Designed and built by the <a href="https://www.who.int/emergencies/overview">WHO Health Emergencies Programme</a>.</li>
+            <li class="mb-2">© 2021 WHO</li>
+            <li class="mb-2">Last updated October 31, 2021</li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+          <h5>Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="/">Home</a></li>
+            <li class="mb-2"><a href="/docs/5.0/">Docs</a></li>
+            <li class="mb-2"><a href="/docs/5.0/examples/">Examples</a></li>
+            <li class="mb-2"><a href="https://themes.getbootstrap.com/">Themes</a></li>
+            <li class="mb-2"><a href="https://blog.getbootstrap.com/">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Guides</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="/docs/5.0/getting-started/">Getting started</a></li>
+            <li class="mb-2"><a href="/docs/5.0/examples/starter-template/">Starter template</a></li>
+            <li class="mb-2"><a href="/docs/5.0/getting-started/webpack/">Webpack</a></li>
+            <li class="mb-2"><a href="/docs/5.0/getting-started/parcel/">Parcel</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Projects</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap">Bootstrap 5</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/tree/v4-dev">Bootstrap 4</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/icons">Icons</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/rfs">RFS</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap-npm-starter">npm starter</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Community</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/issues">Issues</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/discussions">Discussions</a></li>
+            <li class="mb-2"><a href="https://github.com/sponsors/twbs">Corporate sponsors</a></li>
+            <li class="mb-2"><a href="https://opencollective.com/bootstrap">Open Collective</a></li>
+            <li class="mb-2"><a href="https://bootstrap-slack.herokuapp.com/">Slack</a></li>
+            <li class="mb-2"><a href="https://stackoverflow.com/questions/tagged/bootstrap-5">Stack Overflow</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+        Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists,
+        etc.
+      </div>
+      <div class="dropdown mt-3">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown">
+          Dropdown button
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

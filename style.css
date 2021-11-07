@@ -1,0 +1,297 @@
+body {
+  padding-top: 100px;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  max-height: 78px;
+  overflow: hidden;
+}
+
+.navbar-logo {
+  padding-left: .75rem;
+  width: 220px;
+  cursor: pointer;
+}
+
+.nav-logo-text {
+  display: inline-block;
+  position: absolute;
+  font-size: 20px;
+  line-height: 1;
+  padding: 4px;
+  height: 52px;
+  font-weight: bold;
+  color: #035274;
+}
+
+.navbar-user button {
+  border: none;
+  background: #fff;
+  height: 45px;
+  display: inline;
+  padding-top: 5px;
+  font-weight: bold;
+}
+
+.navbar-user button .material-icons {
+  vertical-align: text-top;
+  margin-left: 5px;
+  font-weight: normal;
+}
+
+.navbar-search {
+  width: 350px;
+}
+
+.navbar-search input {
+  width: 100%;
+}
+
+.navbar-user {
+  width: 150px;
+  text-align: right;
+}
+
+.navbar-user img {
+  border-radius: 50%;
+}
+
+.container {
+  max-width: 1140px;
+  margin-bottom: 40px;
+}
+
+.container p {
+  font-size: large;
+  padding-right: 70px;
+}
+
+.nav {
+  flex-flow: column;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav .nav-link {
+  border-radius: 0;
+  border-bottom: 3px solid #fff;
+}
+
+.nav .nav-link:hover {
+  background-color: #efefef;
+}
+
+.nav .nav-link.active,
+.nav .nav-link:hover.active {
+  background-color: #ddd;
+}
+
+.nav-metric div {
+  color: #000;
+}
+
+.nav-metric .metric-name {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: bold;
+  color: #555;
+  padding-bottom: 3px;
+}
+
+.nav-metric .material-icons {
+  font-size: 14px;
+}
+
+.nav-metric .risk-5 {
+  color: rgb(121, 0, 25);
+}
+
+.nav-metric .risk-4 {
+  color: rgb(217, 0, 44);
+}
+
+.nav-metric .risk-3 {
+  color: rgb(255, 150, 0);
+}
+
+.nav-metric .risk-2 {
+  color: rgb(255, 201, 0);
+}
+
+.nav-metric .risk-1 {
+  color: rgb(0, 212, 116);
+}
+
+.nav-metric .metric-value {
+  font-family: "Source Code Pro";
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+.nav-metric .metric-unit {
+  text-transform: uppercase;
+  font-size: 13px;
+  padding-bottom: 8px;
+}
+
+.nav.nav-tabs {
+  flex-wrap: nowrap;
+  flex-flow: initial;
+}
+
+.nav.nav-tabs .nav-link {
+  width: 150px;
+  padding: 10px 5 5px 5px;
+  margin: 0 10px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.nav.nav-tabs .nav-link.active {
+  color: initial;
+  background-color: #f9f9f9;
+  border-bottom: 3px solid #111;
+}
+
+.nav.nav-tabs .nav-metric .metric-name {
+  height: 40px;
+}
+.nav.nav-tabs .nav-link.active .metric-value,
+.nav.nav-tabs .nav-link.active .metric-unit {
+    font-weight: bold;
+}
+
+.tab-content .tab-pane {
+  padding: 30px 0;
+}
+
+svg.map {
+  cursor: pointer;
+  width:1100px;
+  height:600px;
+  margin-top: -40px;
+}
+
+.chart {
+  background: #fff;
+}
+
+.chart-header {
+  background: #fff;
+}
+
+.chart-header .form-floating {
+  display: inline-block;
+}
+
+.chart-header .form-floating label {
+  text-transform: uppercase;
+  font-size: 13px;
+  ;
+  font-weight: bold;
+  color: #333;
+  opacity: .8;
+  white-space: nowrap;
+}
+
+.chart-header .form-floating select {
+  height: 60px;
+  cursor: pointer;
+  line-height: initial;
+  font-weight: 500;
+}
+
+.chart-header .form-floating select option {
+  background-color: #fff;
+}
+
+.chart-header .form-floating select:hover {
+  background-color: #f9f9f9;
+}
+
+.chart-header .form-floating select:hover option {
+  background-color: #fff;
+}
+
+.chart-content {
+  background: #fff;
+  padding: 50px 0;
+}
+
+.chart-axis {
+  color: #888;
+}
+
+.chart-axis text {
+  color: #000;
+  font-size: 13px;
+}
+
+.chart-tabs {
+  background: #fff;
+}
+
+.chart-tabs-content {
+  background: #fff;
+}
+
+.sidebar .inner-wrapper-sticky {
+  box-shadow: rgb(0 0 0 / 8%) 0px 2px 16px;
+}
+
+.sidebar .nav {
+  background-color: #f9f9f9;
+}
+
+.sidebar h4 {
+  font-size: large;
+  padding: 10px 15px;
+  border-bottom: 3px solid #fff;
+  margin: 0;
+  background: #007eb4;
+  color: #fff;
+  border-radius: 5px 5px 0 0;
+}
+
+footer {
+  background-color: #007eb4;
+  color: #fff;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.page.align-center .container h1,
+.page.align-center .container h2,
+.page.align-center .container p,
+.page.align-center .tab-content .tab-pane,
+.page.align-center .nav,
+.page.align-center .chart {
+  justify-content: center;
+  text-align: center;
+}
+
+.page.align-center .container p {
+  font-size: large;
+  padding: 20px 150px;
+}
+
+.page.align-center .container h1,
+.page.align-center .container h2 {
+  padding: 10px 150px;
+}

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>COVID-19 Global Tracker</title>
+  <link rel="shortcut icon" href="images/logo.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://d3js.org/d3.v6.js"></script>
+  <script src="script.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-light fixed-top">
+    <div class="navbar-logo" onclick="navigate('#home')">
+      <img src="images/logo.png" height="52" />
+      <div class="nav-logo-text">
+        <div>COVID-19</div> 
+        <div>Global Tracker</div>
+      </div>
+    </div>
+    <div class="p-2 navbar-search">
+      <input class="form-control me-2 invisible" type="search" placeholder="Search location" aria-label="Search">
+    </div>
+    <div class="p-2 navbar-user">
+      <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+        aria-controls="offcanvasExample">
+        Menu<span class="material-icons">menu</span>
+      </button>
+      <!--img src="images/profile.png" height="45"/-->
+    </div>
+  </nav>
+  <div id="home" class="page active align-center">
+    <div class="container">
+      <h1>COVID-19 Global Tracker</h1>
+      <p>Evidence-based tracking and analysis of COVID-19 health systems readiness and response to support countries,
+        communities and partners accelerate the equitable delivery of critical health interventions to stop transmission
+        and save lives.</p>
+      <h2>Vaccination</h2>
+      <div id="vxTabs"></div>
+      <h2>Diagnotics &amp; Testing</h2>
+      <div id="dxTabs"></div>
+      <h2>Theraputics &amp; Clinical Care</h2>
+      <div id="txTabs"></div>
+      <!--h2>Protecting Health Workers</h2>
+      <div id="pxTabs"></div-->
+    </div>
+    <div class="container">
+      <h2>Compare Trends</h2>
+      <p>As of October 28, 2021, there have been roughly 45.8 million cases and 743,000 deaths from COVID in the United States. Over the last 14 days, daily new cases have decreased by about 16% and daily deaths have decreased by about 15%.</p>
+      <div class="chart">
+        <div class="chart-header">
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="1">Daily new cases</option>
+              <option value="2">Vaccination coverage</option>
+              <option value="3">Positive test rate</option>
+              <option value="4">Hospital capacity available</option>
+              <option value="5">Health workers protected</option>
+              <option value="6">Financing available</option>
+            </select>
+            <label>Metric</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="3">All time</option>
+              <option value="1">Past 60 days</option>
+              <option value="2">Past 180 days</option>
+            </select>
+            <label>Time period</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="3">Country income level</option>
+              <option value="1">Region</option>
+              <option value="1">Selected countries</option>
+            </select>
+            <label>Group by</label>
+          </div>
+        </div>
+        <div class="chart-content">
+          <div id="chartSVG"></div>
+        </div>
+        <!--div class="chart-tabs">
+          chart-tabs
+        </div>
+        <div class="chart-tabs-content">
+          chart-tabs-content
+        </div-->
+      </div>
+    </div>
+    <div class="container">
+      <h2>About Us</h2>
+      <p>This website is part of the <b>Health Systems & Response Connector (HSRC)</b> of the <a href="https://www.who.int/initiatives/act-accelerator" style="text-decoration: none;">Access to COVID-19 Tools (ACT) Accelerator</a>. The goal of the HSRC is to ensure all countries have the necessary
+        technical, operational and financial resources to translate new COVID-19 tools into effective national response interventions.</p>
+        <div class="d-flex justify-content-center">
+          <div class="p-5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/World_Health_Organization_Logo.svg" height="48">
+          </div>
+          <div class="p-5" style="padding-top: 2rem !important;">
+            <img src="https://www.un.org/sites/un2.un.org/files/field/image/world-bank-logo_0.jpg" height="75">
+          </div>
+          <div class="p-5" style="padding-top: .5rem !important;">
+            <img src="https://www.theglobalfund.org/_Site/Images/screen_homepage_en.jpg" height="120">
+          </div>
+          <div class="p-5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/UNICEF_Logo.svg/768px-UNICEF_Logo.svg.png" height="30">
+          </div>
+        </div>
+        <p><button type="button" class="btn btn-outline-primary">Learn more about us</button></p>
+    </div>
+  </div>
+  <div id="location" class="page">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 order-md-2">
+          <h1 class="d-sm-block d-md-none">Australia</h1>
+          <div id="sidebar" class="sidebar">
+            <h4 class="text-truncate">Risk Level</h4>
+            <ul class="nav nav-pills" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Daily new cases</div>
+                  <div>
+                    <span class="material-icons risk-3">fiber_manual_record</span>
+                    <span class="metric-value">68.3</span>
+                    <span class="metric-unit">Per 100K</span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Vaccination coverage</div>
+                  <div>
+                    <span class="material-icons risk-2">fiber_manual_record</span>
+                    <span class="metric-value">75%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Positive test rate</div>
+                  <div>
+                    <span class="material-icons risk-4">fiber_manual_record</span>
+                    <span class="metric-value">3.1%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Hospital capacity available</div>
+                  <div>
+                    <span class="material-icons risk-5">fiber_manual_record</span>
+                    <span class="metric-value">67.4%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Health workers protected</div>
+                  <div>
+                    <span class="material-icons risk-3">fiber_manual_record</span>
+                    <span class="metric-value">45%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link nav-metric" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home"
+                  type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="metric-name">Response funds available</div>
+                  <div>
+                    <span class="material-icons risk-4">fiber_manual_record</span>
+                    <span class="metric-value">65%</span>
+                    <span class="metric-unit"></span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-9 order-md-1" style="height: 1000px;">
+          <h1 class="d-sm-none d-md-block">Australia</h1>
+          <p>In Australia, from 3 January 2020 to 4:40pm CEST, 29 October 2021, there have been 165,904 confirmed cases of COVID-19 with 1,696 deaths, reported to WHO. As of 23 October 2021, a total of 34,238,479 vaccine doses have been administered.</p>
+          <h2>Cases</h2>
+          <div class="chart">
+            <div class="chart-header">
+              <div id="casesTabs"></div>
+            </div>
+            <div class="chart-content">
+              <div id="casesChart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Compare Trends</h2>
+      <p>As of October 28, 2021, there have been roughly 45.8 million cases and 743,000 deaths from COVID in the United States. Over the last 14 days, daily new cases have decreased by about 16% and daily deaths have decreased by about 15%.</p>
+      <div class="chart">
+        <div class="chart-header">
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="1">Daily new cases</option>
+              <option value="2">Vaccination coverage</option>
+              <option value="3">Positive test rate</option>
+              <option value="4">Hospital capacity available</option>
+              <option value="5">Health workers protected</option>
+              <option value="6">Financing available</option>
+            </select>
+            <label>Metric</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="3">All time</option>
+              <option value="1">Past 60 days</option>
+              <option value="2">Past 180 days</option>
+            </select>
+            <label>Time period</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select">
+              <option value="3">Country income level</option>
+              <option value="1">Region</option>
+              <option value="1">Selected countries</option>
+            </select>
+            <label>Group by</label>
+          </div>
+        </div>
+        <div class="chart-content">
+          <div id="chartSVG"></div>
+        </div>
+        <!--div class="chart-tabs">
+          chart-tabs
+        </div>
+        <div class="chart-tabs-content">
+          chart-tabs-content
+        </div-->
+      </div>
+    </div>
+  </div>
+  <footer class="bd-footer py-5 mt-5">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-lg-3 mb-3">
+          <a class="d-inline-flex align-items-center mb-2 text-decoration-none" href="/">
+            <img src="http://www.who.int/ResourcePackages/WHO/assets/dist/images/logos/en/h-logo-white.svg" height="50" alt="Home" class="logo">
+          </a>
+          <ul class="list-unstyled small">
+            <li class="mb-2 visually-hidden">Designed and built by the <a href="https://www.who.int/emergencies/overview">WHO Health Emergencies Programme</a>.</li>
+            <li class="mb-2">© 2021 WHO</li>
+            <li class="mb-2">Last updated October 31, 2021</li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+          <h5>Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="/">Home</a></li>
+            <li class="mb-2"><a href="/docs/5.0/">Docs</a></li>
+            <li class="mb-2"><a href="/docs/5.0/examples/">Examples</a></li>
+            <li class="mb-2"><a href="https://themes.getbootstrap.com/">Themes</a></li>
+            <li class="mb-2"><a href="https://blog.getbootstrap.com/">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Guides</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="/docs/5.0/getting-started/">Getting started</a></li>
+            <li class="mb-2"><a href="/docs/5.0/examples/starter-template/">Starter template</a></li>
+            <li class="mb-2"><a href="/docs/5.0/getting-started/webpack/">Webpack</a></li>
+            <li class="mb-2"><a href="/docs/5.0/getting-started/parcel/">Parcel</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Projects</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap">Bootstrap 5</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/tree/v4-dev">Bootstrap 4</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/icons">Icons</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/rfs">RFS</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap-npm-starter">npm starter</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Community</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/issues">Issues</a></li>
+            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/discussions">Discussions</a></li>
+            <li class="mb-2"><a href="https://github.com/sponsors/twbs">Corporate sponsors</a></li>
+            <li class="mb-2"><a href="https://opencollective.com/bootstrap">Open Collective</a></li>
+            <li class="mb-2"><a href="https://bootstrap-slack.herokuapp.com/">Slack</a></li>
+            <li class="mb-2"><a href="https://stackoverflow.com/questions/tagged/bootstrap-5">Stack Overflow</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+        Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists,
+        etc.
+      </div>
+      <div class="dropdown mt-3">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown">
+          Dropdown button
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
