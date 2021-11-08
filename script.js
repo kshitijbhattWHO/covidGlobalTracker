@@ -71,19 +71,19 @@ function drawMap(elm, metric) {
     // Defining color range
     
     let colorScale = d3.scaleOrdinal();
-    
-    switch (elm) {
-      case "#Vx_1_SVG" :
+    console.log(metadata)
+    switch (metadata.id) {
+      case "Vx_1" :
         colorScale
         .domain([ 4, 3, 2, 1])
         .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
         break;
-      case "#Vx_2_SVG" :
+      case "Vx_2" :
         colorScale
         .domain([ 4, 3, 2, 1])
         .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
         break;
-      case "#Vx_3_SVG" :
+      case "Vx_3" :
         colorScale
         .domain([ 4, 3, 2, 1])
         .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
