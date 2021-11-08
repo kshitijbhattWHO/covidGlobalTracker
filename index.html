@@ -15,6 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v6.js"></script>
+  <script src="script_metadata.js"></script>
   <script src="script.js"></script>
 </head>
 <body>
@@ -39,16 +40,19 @@
   </nav>
   <div id="home" class="page active align-center">
     <div class="container">
-      <h1>COVID-19 Global Tracker</h1>
-      <p>Evidence-based tracking and analysis of COVID-19 health systems readiness and response to support countries,
-        communities and partners accelerate the equitable delivery of critical health interventions to stop transmission
-        and save lives.</p>
+      <h1>Global COVID-19 Access Tracker</h1>
+      <p>The ACT-Accelerator and Multilateral Leaders Task Force on Scaling COVID-19 Tools <b>Global COVID-19 Access Tracker</b> is a dynamic 
+        tool to measure progress towards the global targets for access to COVID-19 vaccines, treatments, tests, and PPE, barriers in access to these 
+        COVID-19 tools, and delivery of donor pledges.</p>
       <h2>Vaccination</h2>
+      <p>The vaccination targets are to achieve 40% coverage in all countries by the end-2021 and 70% by mid-2022. Vaccines are the most effective tool to prevent severe disease and death, and lower transmission.</p>
       <div id="vxTabs"></div>
       <h2>Diagnotics &amp; Testing</h2>
+      <p>The diagnostics target is for all countries to achieve testing rates of 1 per 1,000 people per day by the end of 2021 / in 2022. Testing is needed to identify disease hotspots and track the emergence of new, dangerous variants.</p>
       <div id="dxTabs"></div>
       <h2>Theraputics &amp; Clinical Care</h2>
       <div id="txTabs"></div>
+      <p>The therapeutics target is to treat all severe cases of COVID-19 / treat 200 million cases. Treatments, including medical oxygen, are needed for those severely affected by COVID-19 or to prevent those in at-risk groups from progressing to severe disease.</p>
       <!--h2>Protecting Health Workers</h2>
       <div id="pxTabs"></div-->
     </div>
@@ -96,7 +100,7 @@
         </div-->
       </div>
     </div>
-    <div class="container">
+    <div class="container" style="display: none;">
       <h2>About Us</h2>
       <p>This website is part of the <b>Health Systems & Response Connector (HSRC)</b> of the <a href="https://www.who.int/initiatives/act-accelerator" style="text-decoration: none;">Access to COVID-19 Tools (ACT) Accelerator</a>. The goal of the HSRC is to ensure all countries have the necessary
         technical, operational and financial resources to translate new COVID-19 tools into effective national response interventions.</p>

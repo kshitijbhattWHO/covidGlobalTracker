@@ -1,83 +1,21 @@
 $(document).ready(function () {
   drawChart("#chartSVG");
-  drawNav("#vxTabs", [{
-    id: "vxTab_1",
-    name: "Fully vaccinated",
-    metric: "ivb_persons_fully_vaccinated_per100",
-    risk: 3,
-    value: "52",
-    unit: "per 100k"
-  },
-  {
-    id: "vxTab_2",
-    name: "At least one dose",
-    metric: "ivb_persons_vaccinated_1plus_dose_per100",
-    risk: 4,
-    value: "45",
-    unit: "per 100k"
-  },
-  {
-    id: "vxTab_3",
-    name: "Total doses",
-    metric: "ivb_total_vaccinations_per100",
-    risk: 4,
-    value: "45",
-    unit: "per 100k"
-  }]);
 
-  drawNav("#dxTabs", [{
-    id: "dxTab_1",
-    name: "Positive test rate",
-    metric: "owd_positive_rate",
-    risk: 3,
-    value: "4%",
-    unit: ""
-  },
-  {
-    id: "dxTab_2",
-    name: "Tests per case",
-    metric: "owd_tests_per_case",
-    risk: 4,
-    value: "7%",
-    unit: ""
-  },
-  {
-    id: "dxTab_3",
-    name: "Total tests",
-    metric: "owd_total_tests_per_thousand",
-    risk: 4,
-    value: "45",
-    unit: "per 1k"
-  }]);
-
-  drawNav("#txTabs", [{
-    id: "txTab_1",
-    name: "Total people hospitalized",
-    metric: "owd_hosp_patients_per_million",
-    risk: 3,
-    value: "52",
-    unit: "per 1m"
-  },
-  {
-    id: "txTab_2",
-    name: "Current ICU capacity",
-    metric: "owd_icu_patients_per_million",
-    risk: 4,
-    value: "45%",
-    unit: "per 1m"
-  },
-  {
-    id: "txTab_3",
-    name: "Case fatality ratio",
-    metric: "owd_total_deaths",
-    risk: 4,
-    value: "45%",
-    unit: ""
-  }]);
+  drawNav("vxTabs");
+  drawNav("dxTabs");
+  drawNav("txTabs");
 
 });
 
-function drawNav(elm, data) {
+function drawNav(tab) {
+  var elm = "#" + tab;
+  var data = [];
+  $(metadata).each(function () {
+    if(this.tab == tab) {
+      data.push(this);
+    }
+  });
+  console.log(data);
   var tabHeader = `
     <ul class="nav nav-pills nav-tabs" role="tablist">
     ${ data.map((item, i) => `
@@ -86,7 +24,7 @@ function drawNav(elm, data) {
           <div class="metric-name">${ item.name }</div>
           <div>
             <span class="material-icons risk-${ item.risk }">fiber_manual_record</span>
-            <span class="metric-value">${ item.value }</span>
+            <span class="metric-value">${ parseInt(item.value) }</span>
             <span class="metric-unit">${ item.unit }</span>
           </div>
         </a>
@@ -107,7 +45,7 @@ function drawNav(elm, data) {
     </div>
   `
   $(elm).after($(tabContent.trim()));
-  $(data).each(function() {
+  $(data).each(function () {
     drawMap("#" + this.id + "_SVG", this.metric, "vxLegends_1");
   });
 
@@ -123,102 +61,103 @@ function drawMap(elm, metric, leg) {
     .scale(175)
     .center([0, 20])
     .translate([width / 2, height / 2]);
-  let data = new Map();  // Defines Data variable
+  let data = new Map(); // Defines Data variable
   // Defining color range
   let colorScale = d3.scaleOrdinal()
-  .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-  .range(d3.schemeBlues[7]);
+    .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
+    .range(d3.schemeBlues[7]);
   // Defining legend holder
   let legendHolder = d3.select(leg);
   // Load external data and boot
   Promise.all([
-    d3.json("data/world.geojson"),
-    d3.csv("data/global_metrics.csv")
-  ])
-  .then(function ([world, metricData]) {
-    
+      d3.json("data/world.geojson"),
+      d3.csv("data/global_metrics.csv")
+    ])
+    .then(function ([world, metricData]) {
 
-    let mouseOver = function (d) {
-      d3.selectAll(".Country")
-        .transition()
-        .duration(200)
-        .style("opacity", .5)
 
-      d3.select(this)
-        .transition()
-        .duration(200)
+      let mouseOver = function (d) {
+        d3.selectAll(".Country")
+          .transition()
+          .duration(200)
+          .style("opacity", .5)
+
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", .8)
+          .style("stroke", "#666");
+      }
+      let mouseLeave = function (d) {
+        d3.selectAll(".Country")
+          .transition()
+          .duration(200)
+          .style("opacity", .8)
+          .style("stroke", "transparent");
+        d3.select(this)
+          .transition()
+          .duration(0)
+          .style("stroke", "transparent");
+      }
+
+      // Draw Legend
+      legendHolder.attr("class", "legendHolder")
+      legendHolder.append("div")
+        .text('legend data')
+      legendHolder.append("div")
+        .style("height", 25 + "px")
+        .style("max-width", 210 + "px")
+        .style("width", 100 + "%")
+
+      // Combine geoJson and CSV file matrics
+      const parts = world.features
+      parts.forEach(geoJsonObject => {
+
+        const linkedData = metricData.find(d => d.iso_code === geoJsonObject.id)
+        geoJsonObject.data = linkedData
+        data.set(linkedData);
+      })
+
+
+      // Draw the map
+      svg.append("g")
+        .selectAll("path")
+        .data(world.features)
+        .enter()
+        .append("path")
+        // .attr("d", path)
+        // .join("path")
+        // draw each country
+        .attr("class", function (d) {
+          return "Country"
+        })
+        .attr("d", d3.geoPath()
+          .projection(projection)
+        )
+        .style("stroke", "transparent")
+        // set the color of each country
         .style("opacity", .8)
-        .style("stroke", "#666");
-    }
-    let mouseLeave = function (d) {
-      d3.selectAll(".Country")
-        .transition()
-        .duration(200)
-        .style("opacity", .8)
-        .style("stroke", "transparent");
-      d3.select(this)
-        .transition()
-        .duration(0)
-        .style("stroke", "transparent");
-    } 
+        .attr("fill", function (d) {
+          let colorValue;
+          if (elm = "#vxTab_1_SVG" && typeof d.data !== "undefined") {
+            colorValue = d.data[metric] || 0;
+          }
+          return colorScale(colorValue);
+        })
+        .on("mouseover", mouseOver)
+        .on("mouseleave", mouseLeave)
+        .on("click", (event, d) => {
 
-    // Draw Legend
-    legendHolder.attr("class", "legendHolder")
-    legendHolder.append("div")
-      .text('legend data')
-    legendHolder.append("div")
-      .style("height",  25 + "px")
-      .style("max-width",  210 + "px")
-      .style("width",  100 + "%")
+        })
+        .attr("data-toggle", "tooltip")
+        .attr("data-placement", "top")
+        .attr("title", d => d.properties.name)
+        .append("svg:title")
+        .text(d => d.properties.name)
 
-    // Combine geoJson and CSV file matrics
-    const parts = world.features
-    parts.forEach( geoJsonObject => {
-      
-      const linkedData =  metricData.find(d => d.iso_code === geoJsonObject.id)
-       geoJsonObject.data = linkedData
-       data.set(linkedData);
     })
-    
-
-    // Draw the map
-    svg.append("g")
-      .selectAll("path")
-      .data(world.features)
-      .enter()
-      .append("path")
-      // .attr("d", path)
-      // .join("path")
-      // draw each country
-      .attr("class", function (d) {
-        return "Country"
-      })
-      .attr("d", d3.geoPath()
-      .projection(projection)
-      )
-      .style("stroke", "transparent")
-      // set the color of each country
-      .style("opacity", .8)
-      .attr("fill", function (d) { 
-        let colorValue;
-        if(elm = "#vxTab_1_SVG" && typeof d.data !== "undefined" ){
-          colorValue = d.data[metric] || 0;
-        } 
-        return colorScale(colorValue);
-      })
-      .on("mouseover", mouseOver)
-      .on("mouseleave", mouseLeave)
-      .on("click", (event, d) => {
-         
-      })
-      .attr("data-toggle", "tooltip")
-      .attr("data-placement", "top")
-      .attr("title", d => d.properties.name)
-      .append("svg:title")
-      .text(d => d.properties.name)
-      
-  })
 }
+
 function drawChart(elm) {
   // chart svg: set the dimensions and margins of the graph
   $(elm).html("");
@@ -287,4 +226,3 @@ function drawChart(elm) {
       })
   })
 }
-
