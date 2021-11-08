@@ -95,7 +95,6 @@ function drawMap(elm, metric) {
           colorScale
             .domain([metric.level_1, metric.level_2, metric.level_3, metric.level_4])
             .range(colorRange)
-          console.log(colorRange)
           break;
         case "dxTabs":
           colorScale
