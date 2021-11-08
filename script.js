@@ -11,11 +11,10 @@ function drawNav(tab) {
   var elm = "#" + tab;
   var data = [];
   $(metadata).each(function () {
-    if(this.tab == tab) {
+    if(this.tab === tab) {
       data.push(this);
     }
   });
-  console.log(data);
   var tabHeader = `
     <ul class="nav nav-pills nav-tabs" role="tablist">
     ${ data.map((item, i) => `
@@ -46,7 +45,7 @@ function drawNav(tab) {
   `
   $(elm).after($(tabContent.trim()));
   $(data).each(function () {
-    drawMap("#" + this.id + "_SVG", this.metric, "vxLegends_1");
+    drawMap("#" + this.id + "_SVG", this.metric, "vxLegends_1" + "_SVG");
   });
 
 
@@ -70,11 +69,25 @@ function drawMap(elm, metric, leg) {
       d3.csv("data/metrics_final.csv")
     ])
     .then(function ([world, metricData]) {
+      
     // Defining color range
-    let colorScale = d3.scaleOrdinal()
-    .domain([ 1, 2, 3, 4, 5 ])
-    .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`, `rgb(255, 150, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
-
+    
+    let colorScale = d3.scaleOrdinal();
+    if (elm === "#Vx_1_SVG"){
+         }
+    switch (elm) {
+      case "#Vx_3_SVG" :
+        colorScale
+        .domain([ 4, 3, 2, 1])
+        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
+        break;
+      default :
+        colorScale
+        .domain([ 1, 2, 3, 4])
+        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);   
+        break; 
+    }
+    
       let mouseOver = function (d) {
         d3.selectAll(".Country")
           .transition()
@@ -138,8 +151,10 @@ function drawMap(elm, metric, leg) {
         .style("opacity", .8)
         .attr("fill", function (d) {
           let colorValue;
-          if (elm = "#vxTab_1_SVG" && typeof d.data !== "undefined") {
+
+          if (elm && typeof d.data !== "undefined") {
             colorValue = d.data[metric] || 0;
+            currentTab = elm
           }
           return colorScale(colorValue);
         })
