@@ -45,7 +45,7 @@ function drawNav(tab) {
   `
   $(elm).after($(tabContent.trim()));
   $(data).each(function () {
-    drawMap("#" + this.id + "_SVG", this.metric, "vxLegends_1" + "_SVG");
+    drawMap("#" + this.id + "_SVG", this.metric);
   });
 
 
@@ -71,9 +71,18 @@ function drawMap(elm, metric) {
     // Defining color range
     
     let colorScale = d3.scaleOrdinal();
-    if (elm === "#Vx_1_SVG"){
-         }
+    
     switch (elm) {
+      case "#Vx_1_SVG" :
+        colorScale
+        .domain([ 4, 3, 2, 1])
+        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
+        break;
+      case "#Vx_2_SVG" :
+        colorScale
+        .domain([ 4, 3, 2, 1])
+        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
+        break;
       case "#Vx_3_SVG" :
         colorScale
         .domain([ 4, 3, 2, 1])
@@ -110,14 +119,7 @@ function drawMap(elm, metric) {
           .style("stroke", "transparent");
       }
 
-      // Draw Legend
-      legendHolder.attr("class", "legendHolder")
-      legendHolder.append("div")
-        .text('legend data')
-      legendHolder.append("div")
-        .style("height", 25 + "px")
-        .style("max-width", 210 + "px")
-        .style("width", 100 + "%")
+
 
       // Combine geoJson and CSV file matrics
       const parts = world.features
