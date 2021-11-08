@@ -168,34 +168,8 @@ function drawMap(elm, metric) {
           let colorValue;
           let range;
           if (typeof d.data !== "undefined") {
-            switch (metric.id){
-              case "Vx_1":
-                range = metric.metric                                
-              break;
-              case "Vx_2":
-                range = metric.metric 
-              break;
-              case "Vx_3":
-                range = metric.metric 
-              break;
-              case "Dx_1":
-                range = metric.metric 
-              break;
-              case "Dx_2":
-                range = metric.metric 
-              break;
-              case "Tx_1":
-                range = metric.metric 
-              break;
-              case "Tx_2":
-                range = metric.metric 
-              break;
-              case "Tx_3":
-                range = metric.metric 
-              break;
-            }
-            colorValue= d.data[range] || 0
-            
+            range = metric.metric                                
+            colorValue= d.data[range] || 0;
           }
           return colorScale(colorValue);
         })
