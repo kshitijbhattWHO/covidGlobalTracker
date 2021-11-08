@@ -51,7 +51,7 @@ function drawNav(tab) {
 
 }
 
-function drawMap(elm, metric, leg) {
+function drawMap(elm, metric) {
   var svg = d3.select(elm),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -61,8 +61,6 @@ function drawMap(elm, metric, leg) {
     .center([0, 20])
     .translate([width / 2, height / 2]);
   let data = new Map(); // Defines Data variable  
-  // Defining legend holder
-  let legendHolder = d3.select(leg);
   // Load external data and boot
   Promise.all([
       d3.json("data/world.geojson"),
