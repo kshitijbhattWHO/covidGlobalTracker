@@ -61,20 +61,19 @@ function drawMap(elm, metric, leg) {
     .scale(175)
     .center([0, 20])
     .translate([width / 2, height / 2]);
-  let data = new Map(); // Defines Data variable
-  // Defining color range
-  let colorScale = d3.scaleOrdinal()
-    .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-    .range(d3.schemeBlues[7]);
+  let data = new Map(); // Defines Data variable  
   // Defining legend holder
   let legendHolder = d3.select(leg);
   // Load external data and boot
   Promise.all([
       d3.json("data/world.geojson"),
-      d3.csv("data/global_metrics.csv")
+      d3.csv("data/metrics_final.csv")
     ])
     .then(function ([world, metricData]) {
-
+    // Defining color range
+    let colorScale = d3.scaleOrdinal()
+    .domain([ 1, 2, 3, 4, 5 ])
+    .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`, `rgb(255, 150, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
 
       let mouseOver = function (d) {
         d3.selectAll(".Country")
