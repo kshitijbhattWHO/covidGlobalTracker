@@ -168,7 +168,6 @@ function drawMap(elm, metric) {
         .attr("fill", function (d) {
           let colorValue;
           let range;
-          let domain;
           if (typeof d.data !== "undefined") {
             switch (metric.id){
               case "Vx_1":
