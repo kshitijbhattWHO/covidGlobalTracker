@@ -67,32 +67,19 @@ function drawMap(elm, metric) {
       d3.csv("data/metrics_final.csv")
     ])
     .then(function ([world, metricData]) {
-      
-    // Defining color range
-    
     let colorScale = d3.scaleOrdinal();
-    console.log(metadata)
-    switch (metadata.id) {
-      case "Vx_1" :
-        colorScale
-        .domain([ 4, 3, 2, 1])
-        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
-        break;
-      case "Vx_2" :
-        colorScale
-        .domain([ 4, 3, 2, 1])
-        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
-        break;
-      case "Vx_3" :
-        colorScale
-        .domain([ 4, 3, 2, 1])
-        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
-        break;
+    switch (metadata.level_dir){
+      case "asc" : 
       default :
+      colorScale
+      .domain([ 1, 2, 3, 4])
+      .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);    
+        break;
+      case "desc" :
         colorScale
-        .domain([ 1, 2, 3, 4])
-        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);   
-        break; 
+        .domain([ 4, 3, 2, 1])
+        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
+        break;
     }
     
       let mouseOver = function (d) {
