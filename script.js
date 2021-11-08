@@ -11,7 +11,7 @@ function drawNav(tab) {
   var elm = "#" + tab;
   var data = [];
   $(metadata).each(function () {
-    if(this.tab === tab) {
+    if(this.tab == tab) {
       data.push(this);
     }
   });
@@ -22,7 +22,7 @@ function drawNav(tab) {
         <a class="nav-link nav-metric ${ i == 0 ? 'active' : ''}" id="${ item.id }_Link" data-bs-toggle="pill" data-bs-target="#${ item.id }" type="button" role="tab" aria-controls="${ item.id }" aria-selected="true">
           <div class="metric-name">${ item.name }</div>
           <div>
-            <span class="material-icons risk-${ item.risk }">fiber_manual_record</span>
+            <span class="material-icons risk-${ item.level_value }">fiber_manual_record</span>
             <span class="metric-value">${ parseInt(item.value) }</span>
             <span class="metric-unit">${ item.unit }</span>
           </div>
@@ -39,16 +39,19 @@ function drawNav(tab) {
       <div class="tab-pane fade show ${ i == 0 ? 'active' : ''}" id="${ item.id }" role="tabpanel">
         <div>[${ item.id } TBC]</div>
         <svg id="${ item.id }_SVG" class="map" width="1100" height="600"></svg>
+        <div>
+          <img class="chart-legend" src="images/scale.png" height="30" />
+          <div class="chart-source">This data is sourced from ${ item.source }</div>
+        </div>
       </div>
   `.trim()).join("") }
     </div>
   `
   $(elm).after($(tabContent.trim()));
   $(data).each(function () {
-    drawMap("#" + this.id + "_SVG", this.metric);
+    drawMap("#" + this.id + "_SVG", this);
+    
   });
-
-
 }
 
 function drawMap(elm, metric) {
@@ -67,20 +70,45 @@ function drawMap(elm, metric) {
       d3.csv("data/metrics_final.csv")
     ])
     .then(function ([world, metricData]) {
+    
+    // Defining color range
+    
     let colorScale = d3.scaleOrdinal();
-    switch (metadata.level_dir){
-      case "asc" : 
-      default :
-      colorScale
-      .domain([ 1, 2, 3, 4])
-      .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);    
-        break;
-      case "desc" :
-        colorScale
-        .domain([ 4, 3, 2, 1])
-        .range([`rgb(0, 212, 116)`,`rgb(255, 201, 0)`,`rgb(217, 0, 44)`, `rgb(121, 0, 25)`]);
-        break;
+    let colorRange;
+    if (metric.level_dir === "asc") {
+        colorRange = [
+          `rgb(0, 212, 116)`,
+          `rgb(255, 201, 0)`,
+          `rgb(217, 0, 44)`, 
+          `rgb(121, 0, 25)`
+        ]
+    } else {
+      colorRange = [
+          `rgb(121, 0, 25)`,
+          `rgb(217, 0, 44)`,
+          `rgb(255, 201, 0)`,
+          `rgb(0, 212, 116)`
+        ]
     }
+      switch (metric.tab){
+        case "vxTabs":
+          colorScale
+            .domain([metric.level_1, metric.level_2, metric.level_3, metric.level_4])
+            .range(colorRange)
+          console.log(colorRange)
+          break;
+        case "dxTabs":
+          colorScale
+            .domain([metric.level_1, metric.level_2, metric.level_3])
+            .range(colorRange)
+          break;
+        case "txTabs":
+          colorScale
+            .domain([metric.level_1, metric.level_2, metric.level_3])
+            .range(colorRange)
+          break;
+      }
+        
     
       let mouseOver = function (d) {
         d3.selectAll(".Country")
@@ -116,6 +144,7 @@ function drawMap(elm, metric) {
         geoJsonObject.data = linkedData
         data.set(linkedData);
       })
+      
 
 
       // Draw the map
@@ -138,10 +167,37 @@ function drawMap(elm, metric) {
         .style("opacity", .8)
         .attr("fill", function (d) {
           let colorValue;
-
-          if (elm && typeof d.data !== "undefined") {
-            colorValue = d.data[metric] || 0;
-            currentTab = elm
+          let range;
+          let domain;
+          if (typeof d.data !== "undefined") {
+            switch (metric.id){
+              case "Vx_1":
+                range = metric.metric                                
+              break;
+              case "Vx_2":
+                range = metric.metric 
+              break;
+              case "Vx_3":
+                range = metric.metric 
+              break;
+              case "Dx_1":
+                range = metric.metric 
+              break;
+              case "Dx_2":
+                range = metric.metric 
+              break;
+              case "Tx_1":
+                range = metric.metric 
+              break;
+              case "Tx_2":
+                range = metric.metric 
+              break;
+              case "Tx_3":
+                range = metric.metric 
+              break;
+            }
+            colorValue= d.data[range] || 0
+            
           }
           return colorScale(colorValue);
         })

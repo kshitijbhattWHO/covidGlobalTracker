@@ -243,6 +243,16 @@ svg.map {
   background: #fff;
 }
 
+.chart-source {
+  color: #888;
+  font-size: 14px;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.chart-legend {
+}
+
 .sidebar .inner-wrapper-sticky {
   box-shadow: rgb(0 0 0 / 8%) 0px 2px 16px;
 }
