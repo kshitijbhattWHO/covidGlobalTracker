@@ -34,11 +34,13 @@ function drawNav(tab) {
   $(elm).html(tabHeader.trim());
 
   var tabContent = `
-    <div class="tab-content">
+    <div id="tab-content" class="tab-content">
     ${ data.map((item, i) => `
       <div class="tab-pane fade show ${ i == 0 ? 'active' : ''}" id="${ item.id }" role="tabpanel">
         <div>[${ item.id } TBC]</div>
-        <svg id="${ item.id }_SVG" class="map" width="1100" height="600"></svg>
+        <div id="svg-wrapper-container" class="svg-container">
+        <svg id="${ item.id }_SVG" class="map"></svg>
+        </div>
         <div>
           <img class="chart-legend" src="images/scale.png" height="30" />
           <div class="chart-source">This data is sourced from ${ item.source }</div>
@@ -50,18 +52,17 @@ function drawNav(tab) {
   $(elm).after($(tabContent.trim()));
   $(data).each(function () {
     drawMap("#" + this.id + "_SVG", this);
-    
   });
 }
 
 function drawMap(elm, metric) {
   var svg = d3.select(elm),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
+  width = document.getElementById('svg-wrapper-container').clientWidth;
+  height = document.getElementById('svg-wrapper-container').clientWidth;
   // Map and projection
   var projection = d3.geoMercator()
-    .scale(175)
-    .center([0, 20])
+    .scale(width/640 * 100)
+    .center([0, 30])
     .translate([width / 2, height / 2]);
   let data = new Map(); // Defines Data variable  
   // Load external data and boot
@@ -147,6 +148,9 @@ function drawMap(elm, metric) {
 
 
       // Draw the map
+      svg
+      .attr("viewBox", "0 0 " + width + " " + height)
+      .attr("preserveAspectRatio", "xMinYMin meet")
       svg.append("g")
         .selectAll("path")
         .data(world.features)
@@ -198,7 +202,7 @@ function drawChart(elm) {
       left: 60
     },
     width = parentWidth - margin.left - margin.right,
-    height = (parentWidth * .4) - margin.top - margin.bottom;
+    height = (parentWidth) - margin.top - margin.bottom;
   // append the svg object to the body of the page
   var svg = d3.select(elm)
     .append("svg")
