@@ -58,7 +58,7 @@ function drawNav(tab) {
 function drawMap(elm, metric) {
   var svg = d3.select(elm),
   width = document.getElementById('svg-wrapper-container').clientWidth;
-  height = document.getElementById('svg-wrapper-container').clientWidth;
+  height = document.getElementById('svg-wrapper-container').clientWidth / 1.5;
   // Map and projection
   var projection = d3.geoMercator()
     .scale(width/640 * 100)
@@ -202,7 +202,7 @@ function drawChart(elm) {
       left: 60
     },
     width = parentWidth - margin.left - margin.right,
-    height = (parentWidth) - margin.top - margin.bottom;
+    height = (parentWidth * .4) - margin.top - margin.bottom;
   // append the svg object to the body of the page
   var svg = d3.select(elm)
     .append("svg")
