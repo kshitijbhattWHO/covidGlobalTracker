@@ -73,7 +73,7 @@ function drawMap(elm, metric) {
     .then(function ([world, metricData]) {
     
     // Defining color range
-    
+    /*
     let colorScale = d3.scaleOrdinal();
     let colorRange;
     if (metric.level_dir === "asc") {
@@ -108,8 +108,7 @@ function drawMap(elm, metric) {
             .range(colorRange)
           break;
       }
-        
-    
+      */
       let mouseOver = function (d) {
         d3.selectAll(".Country")
           .transition()
@@ -169,6 +168,53 @@ function drawMap(elm, metric) {
         // set the color of each country
         .style("opacity", .8)
         .attr("fill", function (d) {
+          let color = "#eee";
+          let color_1 = "rgb(242, 223, 145)";
+          let color_2 = "rgb(255, 201, 0)";
+          let color_3 = "rgb(255, 150, 0)";
+          let color_4 = "rgb(217, 0, 44)";
+          let color_5 = "rgb(121, 0, 25)";
+
+          if (d.data) {
+            if (d.data[metric.metric]) {
+              let value = d.data[metric.metric];
+              if (value.length > 0) {
+                if (metric.risk_dir == "asc") {
+                  if (! $.isNumeric(value)) {
+                    color = "#eee";
+                  } else if (value < metric.risk_1) {
+                    color = color_1;
+                  } else if (value < metric.risk_2) {
+                    color = color_2;
+                  } else if (value < metric.risk_3) {
+                    color = color_3;
+                  } else if (value < metric.risk_4) {
+                    color = color_4;
+                  } else  {
+                    color = color_5;
+                  }
+                } else {
+                  if (! $.isNumeric(value)) {
+                    color = "#eee";
+                  } else if (value < metric.risk_5) {
+                    color = color_5;
+                  } else if (value < metric.risk_4) {
+                    color = color_4;
+                  } else if (value < metric.risk_3) {
+                    color = color_3;
+                  } else if (value < metric.risk_2) {
+                    color = color_2;
+                  } else  {
+                    color = color_1;
+                  }
+                }
+              }
+            }
+          }
+          return color
+        })
+        /*
+        .attr("fill", function (d) {
           let colorValue;
           let range;
           if (typeof d.data !== "undefined") {
@@ -177,6 +223,7 @@ function drawMap(elm, metric) {
           }
           return colorScale(colorValue);
         })
+        */
         .on("mouseover", mouseOver)
         .on("mouseleave", mouseLeave)
         .on("click", (event, d) => {
